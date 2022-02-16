@@ -26,10 +26,8 @@ func getLogFileFullPath() string {
 
 func openLogFile(filePath string) *os.File {
 	_, err := os.Stat(filePath)
-	//mkDir()
 	switch {
-	case os.IsExist(err):
-		fmt.Println("2222222222222222222")
+	case os.IsNotExist(err):
 		mkDir()
 	case os.IsPermission(err):
 		log.Fatalf("Permission :%v", err)
