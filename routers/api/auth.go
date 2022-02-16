@@ -40,6 +40,7 @@ func GetAuth(c *gin.Context) {
 	} else {
 		for _, err := range valid.Errors {
 			logging.Info(err.Key, err.Message)
+			//log.Printf("err.key: %s err.message: %s", err.Key, err.Message)
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
