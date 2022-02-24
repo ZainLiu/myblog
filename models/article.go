@@ -1,25 +1,20 @@
 package models
 
-import (
-	"github.com/jinzhu/gorm"
-	"time"
-)
-
 type Article struct {
 	Model
-	TagID int `json:"tag_id" gorm:"index"`
-	Tag Tag `json:"tag"`
-	Title string `json:"title"`
-	Desc string `json:"desc"`
-	Content string `json:"content"`
-	CreatedBy string `json:"created_by"`
+	TagID      int    `json:"tag_id" gorm:"index"`
+	Tag        Tag    `json:"tag"`
+	Title      string `json:"title"`
+	Desc       string `json:"desc"`
+	Content    string `json:"content"`
+	CreatedBy  string `json:"created_by"`
 	ModifiedBy string `json:"modified_by"`
-	State int `json:"state"`
+	State      int    `json:"state"`
 }
 
 func ExistArticleByID(id int) bool {
 	var article Article
-	db.Select("id").Where("id=?",id).First(&article)
+	db.Select("id").Where("id=?", id).First(&article)
 	if article.ID > 0 {
 		return true
 	}
@@ -49,11 +44,11 @@ func EditArticle(id int, data interface{}) bool {
 
 func AddArticle(data map[string]interface{}) bool {
 	db.Create(&Article{
-		TagID: data["tag_id"].(int),
-		Title: data["title"].(string),
-		Desc: data["desc"].(string),
+		TagID:     data["tag_id"].(int),
+		Title:     data["title"].(string),
+		Desc:      data["desc"].(string),
 		CreatedBy: data["created_by"].(string),
-		State: data["state"].(int),
+		State:     data["state"].(int),
 	})
 	return true
 }
@@ -61,15 +56,3 @@ func DeleteArticle(id int) bool {
 	db.Where("id=?", id).Delete(Article{})
 	return true
 }
-
-func (article *Article) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
-	return nil
-}
-
-func (article *Article) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
-
-	return nil
-}
-

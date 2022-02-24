@@ -1,28 +1,12 @@
 package models
 
-import (
-	"github.com/jinzhu/gorm"
-	"time"
-)
-
 type Tag struct {
 	Model
-	Name string `json:"name"`
-	CreatedBy string `json:"created_by"`
+	Name       string `json:"name"`
+	CreatedBy  string `json:"created_by"`
 	ModifiedBy string `json:"modified_by"`
-	State int `json:"state"`
+	State      int    `json:"state"`
 }
-
-func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
-	return nil
-}
-
-func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
-	return nil
-}
-
 
 func GetTags(pageNum int, pagesize int, maps interface{}) (tags []Tag) {
 	db.Where(maps).Offset(pageNum).Limit(pagesize).Find(&tags)
@@ -37,7 +21,7 @@ func GetTagTotal(maps interface{}) (count int) {
 
 func ExistTageByName(name string) bool {
 	var tag Tag
-	db.Select("id").Where("name=?",name).First(&tag)
+	db.Select("id").Where("name=?", name).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -46,8 +30,8 @@ func ExistTageByName(name string) bool {
 
 func AddTag(name string, state int, createdBy string) bool {
 	db.Create(&Tag{
-		Name: name,
-		State: state,
+		Name:      name,
+		State:     state,
 		CreatedBy: createdBy,
 	})
 	return true
@@ -55,7 +39,7 @@ func AddTag(name string, state int, createdBy string) bool {
 
 func ExistTagById(id int) bool {
 	var tag Tag
-	db.Select("id").Where("id=?",id).First(&tag)
+	db.Select("id").Where("id=?", id).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -63,7 +47,7 @@ func ExistTagById(id int) bool {
 }
 
 func EditTag(id int, data interface{}) bool {
-	db.Model(&Tag{}).Where("id=?",id).Update(data)
+	db.Model(&Tag{}).Where("id=?", id).Update(data)
 	return true
 }
 
